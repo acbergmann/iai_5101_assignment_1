@@ -60,11 +60,11 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, y_predicted
 #------------------------
 #
 # # # #FIXME: Not working properly
-# print("SVM")
-# svm = SVC()
-# svm.fit(X_train, y_train)
-# svm_y_pred=svm.predict_proba(X_test)[:,1]
-# print('The accuracy of the SVM classifier on test data is {:.2f}'.format(svm.score(X_test, y_test)))
+print("SVM")
+svm = SVC()
+svm.fit(X_train, y_train)
+svm_y_pred=svm.predict(X_test)
+print('The accuracy of the SVM classifier on test data is {:.2f}'.format(svm.score(X_test, y_test)))
 
 #------------------------
 print("Decision Tree")
@@ -123,47 +123,29 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, dt_pred)))
 # # ----------------------------------------------------------------------------------------------------------------------
 # # 4. Carry out a ROC analysis to compare the performance of the Naïve Bayes, SVM model with
 # # the Decision Tree model. Plot the ROC graph of the models. (10 marks)
+from sklearn.metrics import roc_curve, roc_auc_score
+# calculate FPR, TPR, and threshold values for each model
+nb_fpr, nb_tpr, nb_thresholds = roc_curve(y_test, y_predicted)
+dt_fpr, dt_tpr, dt_thresholds = roc_curve(y_test, dt_pred)
+svm_fpr, svm_tpr, svm_thresholds = roc_curve(y_test, svm_y_pred)
 
-
-
-
-
-
-
-label_binarizer = LabelBinarizer().fit(y_train)
-y_onehot_test = label_binarizer.transform(y_test)
-y_onehot_test.shape  # (n_samples, n_classes)
-label_binarizer.transform(["No_show_1"])
-
-class_of_interest = "No_show_1"
-class_id = np.flatnonzero(label_binarizer.classes_ == class_of_interest)
-class_id
-
-
-print("ROC Naive Bayes")
-RocCurveDisplay.from_predictions(
-    y_test[:, class_id],
-    y_predicted[:, class_id],
-    name=f"{class_of_interest} vs the rest",
-    color="darkorange",
-)
-plt.plot([0, 1], [0, 1], "k--", label="chance level (AUC = 0.5)")
-plt.axis("square")
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
+# plot the ROC curves for both models
+plt.plot(nb_fpr, nb_tpr, label='Naïve Bayes')
+plt.plot(dt_fpr, dt_tpr, label='Decision Tree')
+plt.plot(svm_fpr, svm_tpr, label='SVM')
+plt.plot([0, 1], [0, 1], linestyle='--', label='Random')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC Curves')
 plt.legend()
-plt.show()
 
-print("Decison Tree")
-RocCurveDisplay.from_predictions(
-    y_test[:, class_id],
-    dt_pred[:, class_id],
-    name=f"{class_of_interest} vs the rest",
-    color="darkorange",
-)
-plt.plot([0, 1], [0, 1], "k--", label="chance level (AUC = 0.5)")
-plt.axis("square")
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
-plt.legend()
+# calculate the AUC for each model
+nb_auc = roc_auc_score(y_test, y_predicted)
+dt_auc = roc_auc_score(y_test, dt_pred)
+svm_auc = roc_auc_score(y_test, svm_y_pred)
+
+# print the AUC values
+print('Naïve Bayes AUC:', nb_auc)
+print('Decision Tree AUC:', dt_auc)
+print('SVM AUC:', svm_auc)
 plt.show()
