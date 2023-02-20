@@ -55,8 +55,20 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, y_predicted
 # C. Model Evaluation & Comparison (35 marks):
 # Write a Function to detect the model’s Accuracy by applying the trained model
 # on a testing dataset to find the predicted labels of Status. Was there overfitting?
+accuracy = accuracy_score(y_test, y_predicted)
+# Check for overfitting by comparing the accuracy of the model on the training dataset
+# with the accuracy of the model on the testing dataset
+train_accuracy = naive_bayes.score(X_train, y_train)
+overfitting = train_accuracy - accuracy
 
+print (overfitting)
+##overfitting=-0.0024396091229852424 -> close to zero, so no overfitting neither underfitting
 
+##If the overfitting value is positive, it indicates that the model may be overfitting
+# to the training dataset. If the overfitting value is negative, it indicates that the
+# model may be underfitting the training dataset. If the overfitting value is close to zero,
+# it suggests that the model is performing well and not overfitting or underfitting the
+# training dataset.
 
 #------------------------
 # Tune the model using GridSearchCV (5 marks)
@@ -84,7 +96,7 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, y_pred_2)))
 #
 # # # #FIXME: Not working properly
 print("SVM")
-svm = SVC(kernel='rbf', gamma='scale', degree=3, C=10, verbose=True)
+svm = SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0, verbose=True)
 svm.fit(X_train, y_train)
 svm_y_pred=svm.predict(X_test)
 accuracy_svm=accuracy_score(y_test, svm_y_pred)
@@ -94,6 +106,17 @@ print("\n F1:\n", f1_score(y_test, svm_y_pred))
 print("\n Precision score is:\n", precision_score(y_test, svm_y_pred))
 print("\n Recall score is:\n", recall_score(y_test, svm_y_pred))
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, svm_y_pred)))
+
+
+# model = SVC()
+# kernel = ['poly', 'rbf', 'sigmoid']
+# C = [50, 10, 1.0, 0.1, 0.01]
+# gamma = ['scale']
+# #%%
+# # define grid search
+# grid = dict(kernel=kernel,C=C,gamma=gamma)
+# cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+# grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, cv=cv, scoring='f1',error_score=0)
 #------------------------
 print("Decision Tree")
 # Decision tree
