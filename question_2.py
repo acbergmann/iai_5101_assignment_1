@@ -11,7 +11,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 
-
 # Splitting data into train and test
 target_name = 'No_show_1'
 # given predictions - training data
@@ -33,8 +32,7 @@ naive_bayes.fit(X_train, y_train)
 y_predicted = naive_bayes.predict(X_test)
 
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, y_predicted)))
-print("Classification Report is:\n",classification_report(y_test,y_predicted))
-print("\n F1:\n",f1_score(y_test,y_predicted))
-print("\n Precision score is:\n",precision_score(y_test,y_predicted))
-print("\n Recall score is:\n",recall_score(y_test,y_predicted))
-
+print("Classification Report is:\n", classification_report(y_test, y_predicted))
+print("\n F1:\n", f1_score(y_test, y_predicted))
+print("\n Precision score is:\n", precision_score(y_test, y_predicted))
+print("\n Recall score is:\n", recall_score(y_test, y_predicted))
