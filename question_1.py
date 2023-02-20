@@ -5,6 +5,7 @@ import seaborn as sns
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
+from datetime import datetime
 
 # Read the data using csv
 data = pd.read_csv('MedicalCentre.csv')
@@ -209,6 +210,12 @@ print("There is ", count, " negative Age feature observation.")
 # ----------------------------------------------------------------------------------------------------------------------
 # A5. The values within AwaitingTime are negative, transform them into positive values
 # There is no variable named AwaitingTime. (Are we supposed to calculate it?)
+
+data["AwaitingTime"]=(pd.to_datetime(data['AppointmentDay'], format='%Y-%m-%d'))-(pd.to_datetime(data['ScheduledDay'], format='%Y-%m-%d'))
+data["AwaitingTime"]=abs(((data["AwaitingTime"].dt.total_seconds() / 60)/60)/24)
+print (data["AwaitingTime"])
+#Now we have a new variable which is waiting time in days
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 6. ML algorithm requires the variables to be coded into its equivalent integer codes.
 # (Gender, Neighbourhood, No-show)
@@ -242,7 +249,7 @@ data['ScheduledDay_'], data['ScheduledHour_'] = data['ScheduledDay'].str.split(p
 data['AppointmentDay_'], data['AppointmentHour_'] = data['AppointmentDay'].str.split(pat='T', n=1).str
 clean_data = data[
     ["PatientID", "AppointmentID", "F", "ScheduledDay_", "AppointmentDay_", "Age", "enconded_neighbourhood",
-     "Scholarship", "Hypertension", "Diabetes", "Alcoholism", "Handicap", "SMS_received", "Yes"]].copy()
+     "Scholarship", "Hypertension", "Diabetes", "Alcoholism", "Handicap", "SMS_received", "AwaitingTime", "Yes"]].copy()
 clean_data.rename(columns={"F": "Gender", "enconded_neighbourhood": "Neighbourhood", "Yes": "No_show_1"}, inplace=True)
 print(clean_data.info())
 # ----------------------------------------------------------------------------------------------------------------------
@@ -264,7 +271,7 @@ sns.set_style(style='whitegrid')
 plt.subplot(1, 1, 1)
 clean_data_ = clean_data[
     ["Gender", "Age", "Neighbourhood", "Scholarship", "Hypertension", "Diabetes", "Alcoholism", "Handicap",
-     "SMS_received", "No_show_1"]].copy()
+     "SMS_received", "AwaitingTime", "No_show_1"]].copy()
 corrmat = clean_data_.corr()
 print(corrmat)
 sns.heatmap(corrmat, annot=True)
