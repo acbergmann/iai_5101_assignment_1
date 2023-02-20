@@ -96,7 +96,7 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, y_pred_2)))
 #
 # # # #FIXME: Not working properly
 print("SVM")
-svm = SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0, verbose=True)
+svm = SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0, verbose=True, shrinking=False)
 svm.fit(X_train, y_train)
 svm_y_pred=svm.predict(X_test)
 accuracy_svm=accuracy_score(y_test, svm_y_pred)
@@ -106,7 +106,6 @@ print("\n F1:\n", f1_score(y_test, svm_y_pred))
 print("\n Precision score is:\n", precision_score(y_test, svm_y_pred))
 print("\n Recall score is:\n", recall_score(y_test, svm_y_pred))
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, svm_y_pred)))
-
 
 # model = SVC()
 # kernel = ['poly', 'rbf', 'sigmoid']
@@ -169,18 +168,20 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, dt_pred)))
 # weighted avg       0.68      0.80      0.71     33157
 #------------------------
 # # SVM
-# # Accuracy: 0.8011
-# # Sensitivity/Recall: 0
+# # Accuracy: 0.8004
+# # Sensitivity/Recall: 0.008489993935718617
 # # Specificity: TN/N
-# # F1 score: 0
-# # Precision score 0
+# # F1 score: 0.016644375092881556
+# # Precision score 0.42105263157894735
 # Classification Report is:
 #                precision    recall  f1-score   support
+#
 #            0       0.80      1.00      0.89     26561
-#            1       0.00      0.00      0.00      6596
+#            1       0.42      0.01      0.02      6596
+#
 #     accuracy                           0.80     33157
-#    macro avg       0.40      0.50      0.44     33157
-# weighted avg       0.64      0.80      0.71     33157
+#    macro avg       0.61      0.50      0.45     33157
+# weighted avg       0.73      0.80      0.72     33157
 #------------------------
 # # Decision tree model
 # # Accuracy: 0.7670
@@ -198,11 +199,10 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, dt_pred)))
 #    macro avg       0.59      0.56      0.57     33157
 # weighted avg       0.73      0.77      0.74     33157
 #------------------------
-# Model accuracy score: 0.7670
 # Naïve Bayes AUC: 0.532775447681115
 # Naïve Bayes with GridSearchCV AUC: 0.4999847114400028
 # Decision Tree AUC: 0.5607590377050994
-# SVM AUC: 0.5
+# SVM AUC: 0.5027955033493962
 # # ----------------------------------------------------------------------------------------------------------------------
 # # 4. Carry out a ROC analysis to compare the performance of the Naïve Bayes, SVM model with
 # # the Decision Tree model. Plot the ROC graph of the models. (10 marks)
