@@ -52,10 +52,10 @@ naive_bayes.fit(X_train, Y_train)
 Y_predicted = naive_bayes.predict(X_test)
 
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, Y_predicted)))
-print("Classification Report is:\n",classification_report(Y_test,Y_predicted))
-print("\n F1:\n",f1_score(Y_test,Y_predicted))
-print("\n Precision score is:\n",precision_score(Y_test,Y_predicted))
-print("\n Recall score is:\n",recall_score(Y_test,Y_predicted))
+print("Classification Report is:\n", classification_report(Y_test, Y_predicted))
+print("\n F1:\n", f1_score(Y_test, Y_predicted))
+print("\n Precision score is:\n", precision_score(Y_test, Y_predicted))
+print("\n Recall score is:\n", recall_score(Y_test, Y_predicted))
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, Y_predicted)))
 # ----------------------------------------------------------------------------------------------------------------------
 # C. Model Evaluation & Comparison (35 marks):
@@ -67,7 +67,7 @@ accuracy = accuracy_score(Y_test, Y_predicted)
 train_accuracy = naive_bayes.score(X_train, Y_train)
 overfitting = train_accuracy - accuracy
 
-print (overfitting)
+print(overfitting)
 ##overfitting=-0.0024396091229852424 -> close to zero, so no overfitting neither underfitting
 
 ##If the overfitting value is positive, it indicates that the model may be overfitting
@@ -76,20 +76,20 @@ print (overfitting)
 # it suggests that the model is performing well and not overfitting or underfitting the
 # training dataset.
 
-#------------------------
+# ------------------------
 # Tune the model using GridSearchCV (5 marks)
 print("Naive Bayes with GridSearchCV")
 # Tune the model using GridSearchCV
 param_grid_nb = {
-    'var_smoothing': np.logspace(0,-9, num=100)
+    'var_smoothing': np.logspace(0, -9, num=100)
 }
 grid_search = GridSearchCV(estimator=GaussianNB(), param_grid=param_grid_nb, verbose=1, cv=10, n_jobs=-1)
 best_model_ = grid_search.fit(X_train, Y_train)
 y_pred_2 = best_model_.predict(X_test)
-print("Classification Report is:\n",classification_report(Y_test,y_pred_2))
-print("\n F1:\n",f1_score(Y_test,y_pred_2))
-print("\n Precision score is:\n",precision_score(Y_test,y_pred_2))
-print("\n Recall score is:\n",recall_score(Y_test,y_pred_2))
+print("Classification Report is:\n", classification_report(Y_test, y_pred_2))
+print("\n F1:\n", f1_score(Y_test, y_pred_2))
+print("\n Precision score is:\n", precision_score(Y_test, y_pred_2))
+print("\n Recall score is:\n", recall_score(Y_test, y_pred_2))
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, y_pred_2)))
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, y_pred_2)))
 #
 # # # #FIXME: Not working properly
 print("SVM")
-svm = SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0, verbose=True)
+svm = SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0, verbose=True, shrinking=False)
 # svm.fit(X_train, y_train)
 # svm_y_pred=svm.predict(X_test)
 # accuracy_svm=accuracy_score(y_test, svm_y_pred)
@@ -122,19 +122,28 @@ try:
     with open('fit_history.pkl', 'rb') as f:
         fit_history = dill.load(f)
         print(fit_history)
+except Exception:
+    fit_history = False
+    print('Could not find or open result file')
+    traceback.print_exc()
+
+try:
     # Load the data from the file using dill.load()
     with open('svm_y_prediction.pkl', 'rb') as f:
         svm_y_prediction = dill.load(f)
         print(svm_y_prediction)
+except Exception:
+    svm_y_prediction = False
+    print('Could not find or open result file')
+    traceback.print_exc()
+
+try:
     # Load the data from the file using dill.load()
     with open('svm_score.pkl', 'rb') as f:
         svm_score = dill.load(f)
         print(svm_score)
-
-    # # Apparently .npy does not work properly
-    # svm_fitting_result_data_obj = np.load('fit_history_result.npy', allow_pickle='TRUE').item()
 except Exception:
-    svm_fitting_result_data_obj = False
+    svm_score = False
     print('Could not find or open result file')
     traceback.print_exc()
 
@@ -158,7 +167,7 @@ def fit_svm_data(x_train, x_test, y_train, y_test):
     toc_score = perf_counter()
     print(f"SVM Score took in {toc_score - tic_score:0.4f} seconds")
 
-    svm_fitting_result_data =[
+    svm_fitting_result_data = [
         fit_history,
         svm_y_prediction,
         svm_score
@@ -202,13 +211,22 @@ def fit_svm_data(x_train, x_test, y_train, y_test):
     return svm_fitting_result_data
 
 
-if svm_fitting_result_data_obj:
+if fit_history == False or svm_y_prediction == False or svm_score == False:
+    # # Mock/Test
+    # X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
+    # y = np.dot(X, np.array([1, 2])) + 3
+    #
+    # history = fit_svm_data(X, y)
+
+    # Original
+    svm_fitting_result_data_obj = fit_svm_data(X_train, X_test, Y_train, Y_test)
+    fit_history = svm_fitting_result_data_obj[0]
+    svm_y_prediction = svm_fitting_result_data_obj[1]
+    svm_score = svm_fitting_result_data_obj[2]
+else:
     while True:
         response = input("Do you want to load the previously generated results? (Y)es/(N)o:")
         if response.upper() == 'Y':
-            fit_history = svm_fitting_result_data_obj[0]
-            svm_y_prediction = svm_fitting_result_data_obj[1]
-            svm_score = svm_fitting_result_data_obj[2]
             print("Continuing...")
             break
         elif response.upper() == 'N':
@@ -230,23 +248,10 @@ if svm_fitting_result_data_obj:
         else:
             print("Invalid input. Please enter Y or N.")
 
-else:
-    # # Mock/Test
-    # X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
-    # y = np.dot(X, np.array([1, 2])) + 3
-    #
-    # history = fit_svm_data(X, y)
-
-    # Original
-    svm_fitting_result_data_obj = fit_svm_data(X_train, X_test, Y_train, Y_test)
-    fit_history = svm_fitting_result_data_obj[0]
-    svm_y_prediction = svm_fitting_result_data_obj[1]
-    svm_score = svm_fitting_result_data_obj[2]
-
 print(svm_fitting_result_data_obj)
 print('Fitting process completed')
 
-#------------------------
+# ------------------------
 print("Decision Tree")
 # Decision tree
 dt = DecisionTreeClassifier(random_state=2)
@@ -282,21 +287,21 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, dt_pred)))
 #     accuracy                           0.77     33157
 #    macro avg       0.57      0.53      0.53     33157
 # weighted avg       0.72      0.77      0.73     33157
-#------------------------
+# ------------------------
 # # Naïve Bayes with gridsearchCV
 # # Accuracy: 0.8004
 # # Sensitivity/Recall: 0.001061249241964827
 # # Specificity: TN/N
 # # F1 score: 0.0021109770808202654
 # # Precision score 0.19444444444444445
-#Classification Report is:
+# Classification Report is:
 #                precision    recall  f1-score   support
 #            0       0.80      1.00      0.89     26561
 #            1       0.19      0.00      0.00      6596
 #     accuracy                           0.80     33157
 #    macro avg       0.50      0.50      0.45     33157
 # weighted avg       0.68      0.80      0.71     33157
-#------------------------
+# ------------------------
 # # SVM
 # # Accuracy: 0.8004
 # # Sensitivity/Recall: 0.008489993935718617
@@ -312,7 +317,7 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, dt_pred)))
 #     accuracy                           0.80     33157
 #    macro avg       0.61      0.50      0.45     33157
 # weighted avg       0.73      0.80      0.72     33157
-#------------------------
+# ------------------------
 # # Decision tree model
 # # Accuracy: 0.7670
 # # Sensitivity/Recall: 0.2183141297756216
@@ -328,7 +333,7 @@ print('Model accuracy score: {0:0.4f}'.format(accuracy_score(Y_test, dt_pred)))
 #     accuracy                           0.77     33157
 #    macro avg       0.59      0.56      0.57     33157
 # weighted avg       0.73      0.77      0.74     33157
-#------------------------
+# ------------------------
 # Naïve Bayes AUC: 0.532775447681115
 # Naïve Bayes with GridSearchCV AUC: 0.4999847114400028
 # Decision Tree AUC: 0.5607590377050994
@@ -390,4 +395,5 @@ print('Naïve Bayes AUC:', nb_auc)
 print('Naïve Bayes with GridSearchCV AUC:', nb2_auc)
 print('Decision Tree AUC:', dt_auc)
 print('SVM AUC:', svm_auc)
+plt.savefig('roc_analysis.png')
 plt.show()

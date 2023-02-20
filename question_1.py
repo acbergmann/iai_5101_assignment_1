@@ -150,6 +150,7 @@ plt.bar(range(len(noshow_counts)), noshow_counts.values, align='center')
 plt.xlabel("No-show")
 plt.ylabel("Frequency")
 plt.title("No-show Rating Distribution")
+plt.savefig('frequency_analysis.png')
 plt.show()
 ####Explain why not frequency???????????????? (PatientID, AppointmentID, ScheduledDay)
 # ----------------------------------------------------------------------------------------------------------------------
@@ -190,6 +191,7 @@ sns.boxplot(data=SMS_counts)
 plt.subplot(3, 4, 10)
 plt.xlabel("No-show")
 sns.boxplot(data=noshow_counts)
+plt.savefig('boxplot_analysis.png')
 plt.show()
 # ----------------------------------------------------------------------------------------------------------------------
 # A4. Count the frequency of negative Age feature observations, and remove them
@@ -275,6 +277,8 @@ clean_data_ = clean_data[
 corrmat = clean_data_.corr()
 print(corrmat)
 sns.heatmap(corrmat, annot=True)
+plt.savefig('heatmap_analysis.png')
 plt.show()
+
 
 clean_data_.to_csv('my_clean_data.csv', index=False)
