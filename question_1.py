@@ -151,7 +151,7 @@ plt.xlabel("No-show")
 plt.ylabel("Frequency")
 plt.title("No-show Rating Distribution")
 plt.show()
-####Explain why not frequency???????????????? (PatientID, AppointmentID, ScheduledDay)
+plt.savefig("frequency.png")
 # ----------------------------------------------------------------------------------------------------------------------
 # # A.3. Initialize a function to plot relevant features within the dataset to visualize for outliers:
 # Use box plot to check for outliers, deal with them using scaling
@@ -191,6 +191,7 @@ plt.subplot(3, 4, 10)
 plt.xlabel("No-show")
 sns.boxplot(data=noshow_counts)
 plt.show()
+plt.savefig("boxplot.png")
 # ----------------------------------------------------------------------------------------------------------------------
 # A4. Count the frequency of negative Age feature observations, and remove them
 # count negatives
@@ -275,6 +276,7 @@ clean_data_ = clean_data[
 corrmat = clean_data_.corr()
 print(corrmat)
 sns.heatmap(corrmat, annot=True)
+plt.savefig("correlation.png")
 plt.show()
 
 clean_data_.to_csv('my_clean_data.csv', index=False)
