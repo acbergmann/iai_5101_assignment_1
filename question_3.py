@@ -107,15 +107,6 @@ print("\n Precision score is:\n", precision_score(y_test, svm_y_pred))
 print("\n Recall score is:\n", recall_score(y_test, svm_y_pred))
 print('Model accuracy score: {0:0.4f}'.format(accuracy_score(y_test, svm_y_pred)))
 
-# model = SVC()
-# kernel = ['poly', 'rbf', 'sigmoid']
-# C = [50, 10, 1.0, 0.1, 0.01]
-# gamma = ['scale']
-# #%%
-# # define grid search
-# grid = dict(kernel=kernel,C=C,gamma=gamma)
-# cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-# grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, cv=cv, scoring='f1',error_score=0)
 #------------------------
 print("Decision Tree")
 # Decision tree
